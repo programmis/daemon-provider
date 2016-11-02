@@ -10,6 +10,7 @@ namespace daemon;
 
 declare(ticks = 1);
 
+use logger\Logger;
 use Psr\Log\LoggerInterface;
 use Psr\Log\LogLevel;
 
@@ -166,6 +167,8 @@ abstract class DaemonProvider implements DaemonInterface
     public static function log($message, $level = LogLevel::INFO)
     {
         $logger = self::getLogger();
+        /** @var Logger $logger */
+        $logger = new $logger;
         $logger->log($level, $message);
     }
 

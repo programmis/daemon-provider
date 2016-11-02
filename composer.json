@@ -1,0 +1,32 @@
+{
+  "name": "programmis/daemon-provider",
+  "description": "abstract class for daemons",
+  "homepage": "https://github.com/programmis/daemon-provider",
+  "license": "MIT",
+  "authors": [
+    {
+      "name": "Daniil Sazhin",
+      "email": "sazhin_daniil@mail.ru"
+    }
+  ],
+  "require-dev": {
+    "phpunit/phpunit": "^4.8",
+    "codeception/specify": "0.*",
+    "codeception/verify": "0.*",
+    "codeception/codeception": "2.*",
+    "squizlabs/php_codesniffer": "^2.3",
+    "codeception/c3": "2.*"
+  },
+  "require": {
+    "programmis/colorful-logger": "^0.0.1"
+  },
+  "autoload": {
+    "psr-4": {
+      "daemon\\": "daemon"
+    }
+  },
+  "scripts": {
+    "post-install-cmd": "php init --env=Development --overwrite=n",
+    "post-update-cmd": "php develop_init.php"
+  }
+}

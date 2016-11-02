@@ -49,14 +49,14 @@ abstract class DaemonProvider implements DaemonInterface
             return false;
         }
         file_put_contents(static::PID_FILE, posix_getpid());
-        self::log('Starting daemon, pid: ' . posix_getpid());
+        static::log('Starting daemon, pid: ' . posix_getpid());
         $this->init();
 
         while (!$this->stop_server) {
             $this->loop();
         }
         $this->removePidFile();
-        self::log('Daemon is stopped');
+        static::log('Daemon is stopped');
 
         return true;
     }
@@ -91,12 +91,12 @@ abstract class DaemonProvider implements DaemonInterface
         $pid = self::getPid();
         if ($pid) {
             if (!posix_kill(self::getPid(), 0)) {
-                self::log('Found daemon pid file #' . $pid);
+                static::log('Found daemon pid file #' . $pid);
                 $this->removePidFile();
 
                 return false;
             } else {
-                self::log('Daemon is work, pid #' . $pid);
+                static::log('Daemon is work, pid #' . $pid);
             }
 
             return true;
@@ -129,7 +129,7 @@ abstract class DaemonProvider implements DaemonInterface
         switch ($signo) {
             case SIGTERM:
                 $this->stop_server = true;
-                self::log('Stopping daemon, pid: ' . posix_getpid());
+                static::log('Stopping daemon, pid: ' . posix_getpid());
                 break;
             default:
         }
@@ -152,7 +152,7 @@ abstract class DaemonProvider implements DaemonInterface
     {
         if (is_file(static::PID_FILE)) {
             unlink(static::PID_FILE);
-            self::log('Remove pid file');
+            static::log('Remove pid file');
 
             return true;
         }
@@ -166,14 +166,14 @@ abstract class DaemonProvider implements DaemonInterface
      */
     public static function log($message, $level = LogLevel::INFO)
     {
-        $logger = self::getLogger();
+        $logger = static::getLogger();
         /** @var Logger $logger */
         $logger = new $logger;
         $logger->log($level, $message);
         if (method_exists($logger, 'createString')) {
-            file_put_contents(self::LOG_FILE, $logger::createString($level, $message), FILE_APPEND);
+            file_put_contents(static::LOG_FILE, $logger::createString($level, $message), FILE_APPEND);
         } else {
-            file_put_contents(self::LOG_FILE, date('Y/m/d H:i:s') . ' -> ' . $message . "\n", FILE_APPEND);
+            file_put_contents(static::LOG_FILE, date('Y/m/d H:i:s') . ' -> ' . $message . "\n", FILE_APPEND);
         }
     }
 

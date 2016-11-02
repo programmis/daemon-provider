@@ -18,7 +18,7 @@
     "codeception/c3": "2.*"
   },
   "require": {
-    "programmis/colorful-logger": "^0.0.1"
+    "programmis/colorful-logger": "0.*"
   },
   "autoload": {
     "psr-4": {

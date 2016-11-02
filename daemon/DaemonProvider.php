@@ -170,6 +170,11 @@ abstract class DaemonProvider implements DaemonInterface
         /** @var Logger $logger */
         $logger = new $logger;
         $logger->log($level, $message);
+        if (method_exists($logger, 'createString')) {
+            file_put_contents(self::LOG_FILE, $logger::createString($level, $message), FILE_APPEND);
+        } else {
+            file_put_contents(self::LOG_FILE, date('Y/m/d H:i:s') . ' -> ' . $message . "\n", FILE_APPEND);
+        }
     }
 
     /**

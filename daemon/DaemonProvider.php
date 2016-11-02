@@ -62,16 +62,32 @@ abstract class DaemonProvider implements DaemonInterface
     }
 
     /**
-     * Daemon constructor.
+     * @throws \Exception
      */
-    public function __construct()
+    protected function checkConstants()
     {
         if (!static::PID_FILE || !static::LOG_FILE) {
             throw new \Exception('Please declare PID_FILE and LOG_FILE constants');
         }
+    }
+
+    /**
+     * for stop method
+     */
+    public function initEnvironment()
+    {
         pcntl_signal(SIGTERM, array($this, 'sigHandler'));
         pcntl_signal_dispatch();
         register_shutdown_function(array($this, 'shutdownHandler'));
+    }
+
+    /**
+     * Daemon constructor.
+     */
+    public function __construct()
+    {
+        $this->checkConstants();
+        $this->initEnvironment();
     }
 
     /** @inheritdoc */

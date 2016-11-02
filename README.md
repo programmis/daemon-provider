@@ -1,5 +1,3 @@
-![alt tag](https://travis-ci.org/programmis/Colorful-Logger.svg?branch=master)
-
 **Installing**
 
 _1) Download composer:_
@@ -14,5 +12,5 @@ php -r "unlink('composer-setup.php');"
 _2) Install:_
 
 <pre>
-php composer.phar require programmis/colorful-logger
+php composer.phar require programmis/daemon-provider
 </pre>

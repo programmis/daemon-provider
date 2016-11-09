@@ -1,3 +1,5 @@
+![alt tag](https://travis-ci.org/programmis/daemon-provider.svg?branch=master)
+
 **Installing**
 
 _1) Download composer:_

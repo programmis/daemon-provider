@@ -25,6 +25,10 @@ abstract class DaemonProvider implements DaemonInterface
      * @var bool
      */
     private $stop_server = false;
+    /**
+     * @var bool
+     */
+    private $i_am_child = false;
 
     /**
      * @return bool
@@ -136,11 +140,22 @@ abstract class DaemonProvider implements DaemonInterface
     }
 
     /**
+     * mark current process as children
+     */
+    public function childEnable()
+    {
+        $this->i_am_child = true;
+    }
+
+    /**
      * Catching stop daemon event
      */
     public function shutdownHandler()
     {
         if (!posix_kill(self::getPid(), 0)) {
+            if ($this->i_am_child) {
+                return;
+            }
             $this->removePidFile();
         }
     }

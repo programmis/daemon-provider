@@ -41,7 +41,7 @@ abstract class DaemonProvider implements DaemonInterface
     /**
      * @return LoggerInterface
      */
-    public function getLogger()
+    public static function getLogger()
     {
         return \logger\Logger::class;
     }

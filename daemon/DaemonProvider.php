@@ -47,12 +47,24 @@ abstract class DaemonProvider implements DaemonInterface
     }
 
     /** @inheritdoc */
+    public static function getPidFile()
+    {
+        return static::PID_FILE;
+    }
+
+    /** @inheritdoc */
+    public static function getLogFile()
+    {
+        return static::LOG_FILE;
+    }
+
+    /** @inheritdoc */
     public function start()
     {
         if ($this->isWork()) {
             return false;
         }
-        file_put_contents(static::PID_FILE, posix_getpid());
+        file_put_contents(static::getPidFile(), posix_getpid());
         static::log('Starting daemon, pid: ' . posix_getpid());
         $this->init();
 
@@ -70,7 +82,7 @@ abstract class DaemonProvider implements DaemonInterface
      */
     protected function checkConstants()
     {
-        if (!static::PID_FILE || !static::LOG_FILE) {
+        if (!static::getPidFile() || !static::getLogFile()) {
             throw new \Exception('Please declare PID_FILE and LOG_FILE constants');
         }
     }
@@ -131,8 +143,8 @@ abstract class DaemonProvider implements DaemonInterface
     private static function getPid()
     {
         $pid = 0;
-        if (is_file(static::PID_FILE)) {
-            $string = file_get_contents(static::PID_FILE);
+        if (is_file(static::getPidFile())) {
+            $string = file_get_contents(static::getPidFile());
             if (is_numeric($string)) {
                 $pid = (int)$string;
             }
@@ -181,8 +193,8 @@ abstract class DaemonProvider implements DaemonInterface
      */
     public function removePidFile()
     {
-        if (is_file(static::PID_FILE)) {
-            unlink(static::PID_FILE);
+        if (is_file(static::getPidFile())) {
+            unlink(static::getPidFile());
             static::log('Remove pid file');
 
             return true;
@@ -202,9 +214,9 @@ abstract class DaemonProvider implements DaemonInterface
         $logger = new $logger;
         $logger->log($level, $message);
         if (method_exists($logger, 'createString')) {
-            file_put_contents(static::LOG_FILE, $logger::createString($level, $message), FILE_APPEND);
+            file_put_contents(static::getLogFile(), $logger::createString($level, $message), FILE_APPEND);
         } else {
-            file_put_contents(static::LOG_FILE, date('Y/m/d H:i:s') . ' -> ' . $message . "\n", FILE_APPEND);
+            file_put_contents(static::getLogFile(), date('Y/m/d H:i:s') . ' -> ' . $message . "\n", FILE_APPEND);
         }
     }
 

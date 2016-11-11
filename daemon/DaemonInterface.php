@@ -36,4 +36,14 @@ interface DaemonInterface
      * stopping the daemon
      */
     public static function stop();
+
+    /**
+     * @return string
+     */
+    public static function getPidFile();
+
+    /**
+     * @return string
+     */
+    public static function getLogFile();
 }

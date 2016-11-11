@@ -43,7 +43,7 @@ abstract class DaemonProvider implements DaemonInterface
      */
     public static function getLogger()
     {
-        return \logger\Logger::class;
+        return new Logger();
     }
 
     /** @inheritdoc */
@@ -210,8 +210,7 @@ abstract class DaemonProvider implements DaemonInterface
     public static function log($message, $level = LogLevel::INFO)
     {
         $logger = static::getLogger();
-        /** @var Logger $logger */
-        $logger = new $logger;
+
         $logger->log($level, $message);
         if (method_exists($logger, 'createString')) {
             file_put_contents(static::getLogFile(), $logger::createString($level, $message), FILE_APPEND);
